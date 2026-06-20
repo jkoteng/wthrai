@@ -64,6 +64,16 @@ The layout is separated into:
 
 This separation keeps the codebase easier to extend and easier to explain.
 
+## Screenshots
+
+### Dashboard Overview
+
+![Dashboard Overview](docs/dashboard-overview.png)
+
+### Weather Results
+
+![Weather Search](docssearch-weather.png)
+
 ---
 
 ## Tech stack
