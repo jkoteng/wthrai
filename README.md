@@ -1,46 +1,216 @@
-# Getting Started with Create React App
+# WHTRAI Weather Intelligence Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A polished weather dashboard built for the WeatherAI assignment. It consumes WeatherAI data through a Firebase Functions proxy, presents a clean executive-style UI, and focuses on practical product decisions: fast loading, graceful fallbacks, saved preferences, and a clear architecture story.
 
-## Available Scripts
+**Live demo:** https://wthrai.web.app/
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Project thesis
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The goal of this project was not just to show weather data, but to demonstrate how I approach a real-world API integration problem under time pressure:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- consume a third-party API cleanly,
+- avoid exposing secrets in the browser,
+- handle CORS safely,
+- persist useful user preferences locally,
+- keep the UI structured,
+- and ship a deployment that is easy to verify.
 
-### `npm test`
+To solve the CORS and secret-management problem, the frontend does **not** call WeatherAI directly from the browser. Instead, it calls a Firebase Function proxy, which then talks to WeatherAI server-side and returns the data to the app.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## Features
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Automatic location-based weather lookup
+- Search by city and county / region
+- Current weather snapshot
+- Wear recommendation based on weather conditions
+- Saved cities stored in `localStorage`
+- Quick example locations
+- Error and empty-state handling
+- Responsive dashboard shell with fixed top bar and sidebar
+- Clean, modular CSS architecture using CSS Modules
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Why this architecture
 
-### `npm run eject`
+This app was intentionally structured to show a production-minded approach.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Frontend
+The React application is responsible for:
+- rendering the dashboard,
+- managing user interactions,
+- displaying loading / error / empty states,
+- and storing saved cities locally.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Backend proxy
+A Firebase Function acts as a lightweight API proxy:
+- keeps the WeatherAI API key off the client,
+- avoids browser-to-third-party CORS failures,
+- and creates a safer integration boundary.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Storage
+Saved cities are stored in the browser using `localStorage`, which was enough for the assignment and keeps the solution simple.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Styling
+The layout is separated into:
+- `AppShell` for the app frame,
+- `TopBar` for the header,
+- `Sidebar` for navigation,
+- `Dashboard.module.css` and `AppShell.module.css` for styling.
 
-## Learn More
+This separation keeps the codebase easier to extend and easier to explain.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Tech stack
+
+- React
+- TypeScript
+- Firebase Hosting
+- Firebase Cloud Functions
+- WeatherAI API
+- CSS Modules
+- localStorage
+
+---
+
+## Folder structure
+
+```text
+src/
+  components/
+    layout/
+      AppShell.tsx
+      TopBar.tsx
+      Sidebar.tsx
+      AppShell.module.css
+    weather/
+      WeatherMetrics.tsx
+      AiSummaryCard.tsx
+  hooks/
+    useWeather.ts
+  pages/
+    Dashboard.tsx
+    Dashboard.module.css
+  style/
+    appshell.module.css
+```
+
+Backend:
+
+```text
+functions/
+  index.js
+```
+
+---
+
+## Data flow
+
+```text
+User in browser
+  → React dashboard
+  → Firebase Function (weatherProxy)
+  → WeatherAI API
+  → Firebase Function returns JSON
+  → Dashboard renders UI
+```
+
+This keeps the client thin and avoids exposing the API key in the frontend bundle.
+
+---
+
+## Setup locally
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/jkoteng/wthrai.git
+cd wthrai
+```
+
+### 2. Install frontend dependencies
+```bash
+npm install
+```
+
+### 3. Install Firebase Functions dependencies
+```bash
+cd functions
+npm install
+cd ..
+```
+
+### 4. Set the WeatherAI secret for Functions
+```bash
+firebase functions:secrets:set WEATHER_AI_API_KEY
+```
+
+Paste your WeatherAI API key when prompted.
+
+### 5. Run the React app locally
+```bash
+npm start
+```
+
+---
+
+## Firebase deployment
+
+### Build the app
+```bash
+npm run build
+```
+
+### Deploy hosting and functions
+```bash
+firebase deploy --only functions,hosting
+```
+
+---
+
+## Notes on the API integration
+
+The app uses WeatherAI for weather data. The function proxy forwards requests to WeatherAI with the secret API key stored securely on the server side.
+
+The frontend then reads the returned weather payload and derives the UI state from it.
+
+---
+
+## Design decisions
+
+A few choices were made to make the submission stronger:
+
+- The hero section carries the main weather story.
+- Supporting cards break down the rest of the experience into readable sections.
+- The sidebar clearly communicates what is available now vs. what is planned later.
+- The layout uses fixed shell regions so the dashboard feels stable and intentional.
+- Saved cities are local-first, which keeps the app simple and fast.
+
+---
+
+## Future improvements
+
+If this were extended beyond the assignment, the next logical upgrades would be:
+
+- a proper user account system,
+- cloud-synced saved locations,
+- richer hourly/daily forecast visualizations,
+- usage/quota visibility,
+- ai summaries & suggestions
+- and a fuller analytics view.
+
+---
+
+## Live deployment
+
+**Firebase Hosting URL:** https://wthrai.web.app/
+
+---
+
+## Author
+
+Joe Koteng
