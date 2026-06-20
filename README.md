@@ -68,11 +68,11 @@ This separation keeps the codebase easier to extend and easier to explain.
 
 ### Dashboard Overview
 
-![Dashboard Overview](docs/dashboard-overview.png)
+![Dashboard Overview](docs/dashboardoverview.png)
 
 ### Weather Results
 
-![Weather Search](docssearch-weather.png)
+![Weather Search]((docs/dashboardresults.png)
 
 ---
 
