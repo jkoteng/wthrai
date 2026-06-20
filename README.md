@@ -72,7 +72,7 @@ This separation keeps the codebase easier to extend and easier to explain.
 
 ### Weather Results
 
-![Weather Search]((docs/dashboardresults.png)
+![Weather Search](docs/dashboardresults.png)
 
 ---
 
