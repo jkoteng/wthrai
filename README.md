@@ -8,7 +8,7 @@ A polished weather dashboard built for the WeatherAI assignment. It consumes Wea
 
 ## Project thesis
 
-The goal of this project was not just to show weather data, but to demonstrate how I approach a real-world API integration problem under time pressure:
+The goal of this project was not just to show weather data, but to demonstrate how I approach a real-world API integration problem under short time contraints.
 
 - consume a third-party API cleanly,
 - avoid exposing secrets in the browser,
